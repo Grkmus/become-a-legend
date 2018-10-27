@@ -1,0 +1,28 @@
+{
+  "name": "getyourteam",
+  "version": "1.0.0",
+  "description": "\"Platform for doing sports with people while keeping track of your performance\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Grkmus/getyourteam.git"
+  },
+  "keywords": [
+    "sports",
+    "platform",
+    "social",
+    "team"
+  ],
+  "author": "tosungo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Grkmus/getyourteam/issues"
+  },
+  "homepage": "https://github.com/Grkmus/getyourteam#readme",
+  "dependencies": {
+    "circular-json": "^0.5.9"
+  }
+}
