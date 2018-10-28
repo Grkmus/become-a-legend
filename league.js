@@ -3,6 +3,10 @@ module.exports = class League {
         this.name = name
         this.sport = sport
         this.teams = []
-        sport.leagues.push(this)
+        //sport.leagues.push(this)
+    }
+
+    static create( {name, sport} ) {
+        return new League(name, sport)
     }
 }

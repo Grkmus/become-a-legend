@@ -5,4 +5,8 @@ module.exports = class Match {
         this.location = location
         this.date = date
     }
+
+    static create({sport, opponents, location, date}){
+        return new Match(sport, opponents, location, date)
+    }
 }

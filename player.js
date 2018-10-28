@@ -9,11 +9,15 @@ module.exports = class Player {
     
     play(sport) {
         this.sports.push(sport)
-        sport.players.push(this)
+        //sport.players.push(this)
     }
 
     joinTeam(team) {
         this.teams.push(team)
-        team.players.push(this)
+        //team.players.push(this)
+    }
+
+    static create({ name, surname, age }) {
+        return new Person(name, surname, age)
     }
 }

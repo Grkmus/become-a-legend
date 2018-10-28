@@ -5,4 +5,8 @@ module.exports = class Sport {
         this.teams = []
         this.leagues = []
     }
+
+    static create( {name} ) {
+        return new Sport (name)
+    }
 }

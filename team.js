@@ -4,11 +4,15 @@ module.exports = class Team {
         this.players = []
         this.sport = sport
         this.league = null
-        sport.teams.push(this)
+        //sport.teams.push(this)
     }
 
     addToLeague(league) {
         this.league = league
-        league.teams.push(this)
+        //league.teams.push(this)
+    }
+
+    static create( {name, sport} ){
+        return new Team(name, sport)
     }
 }
