@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1 The number of the sport is #{sports.length}
+    - var i = 0
+    each sport in sports
+      h3 #{sport.name}, #{sport.players.length} People
+      each player in sport.players
+        li #{player.name}, #{player.surname}

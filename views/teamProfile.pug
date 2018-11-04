@@ -1,0 +1,8 @@
+extends layout
+
+block content
+    h1 Selected team is #{ team.name }
+    each player in team.players
+        p #{player.name}
+        
+      

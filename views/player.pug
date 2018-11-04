@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    h1 Total number of players is #{ players.length }
+    each player in players
+        p -----------------
+        h3 #{player.name} #{player.surname} - Age: #{player.age}
+        img(src=player.picture)
+        h6 id: #{player.id}
+        p Sports:
+        ul
+        each sport in player.sports
+            li #{sport.name}
+      

@@ -1,3 +1,4 @@
+const Player = require('./player')
 module.exports = class Match {
     constructor(sport, opponents, location, date) {
         this.sport = sport

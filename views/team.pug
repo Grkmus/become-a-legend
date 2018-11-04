@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1 Total number of teams is #{ teams.length }
+    each team in teams
+        p ---------
+        h2 #{team.name} | #{team.sport.name}
+        each player in team.players
+            li #{player.name}
+        | id: #{team.id}
+        
+      

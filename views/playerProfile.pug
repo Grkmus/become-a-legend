@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1 Here is the #{ player.name}
+    //each player in players
+    p -----------------
+    h4 #{player.name} #{player.surname} - Age: #{player.age}
+    img(src=player.picture)
+    p Sports:
+    ul
+    each sport in player.sports
+        li #{sport.name}
+      
