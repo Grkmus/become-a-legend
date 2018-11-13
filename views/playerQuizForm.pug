@@ -1,0 +1,125 @@
+extends partials/header
+
+block content
+
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 Quiz
+        hr
+        // register form
+        form(id='target' method='POST' action='/player/' + player.id + '/quiz')
+          h2.display-5.m-b-2 Personal Information
+          div.form-group
+            label(for='age') Age:
+            input#age.form-control(type='number', placeholder='age' name='age')
+          div.form-group
+            label(for='weight') Weight:
+            input#weight.form-control(type='number', placeholder='Your weight as kg' name='weight')
+          div.form-group
+            label(for='height') Height:
+            input#height.form-control(type='number' name='height')
+          div.form-group
+            label(for='location') Location:
+            input#location.form-control(type='text' name='location')
+          div.form-group
+            label(for='telephone') Telephone:
+            input#telephone.form-control(type='text' name='telephone')
+          h2.display-5.m-b-2 Athletic Information
+          
+          fieldset(class="form-group")
+            div(class="row")
+              legend(class="col-form-label col-sm-10 pt-0") Last participation in any sport:
+              div(class="col-sm-10")
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="lastPartInSport" id="lastPartInSport" value="10" checked)
+                  label(class="form-check-label" for="lastPartInSport") Week ago
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="lastPartInSport" id="lastPartInSport" value="8")
+                  label(class="form-check-label" for="lastPartInSport") Month ago
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="lastPartInSport" id="lastPartInSport" value="4")
+                  label(class="form-check-label" for="lastPartInSport") Year ago
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="lastPartInSport" id="lastPartInSport" value="2")
+                  label(class="form-check-label" for="lastPartInSport") Decade
+          
+          fieldset(class="form-group")
+            div(class="row")
+              legend(class="col-form-label col-sm-10 pt-0") Last participation in Basketball:
+              div(class="col-sm-10")
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="lastPartInBasketball" id="" value="10" checked)
+                  label(class="form-check-label" for="") Week ago
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="lastPartInBasketball" id="" value="8")
+                  label(class="form-check-label" for="") Month ago
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="lastPartInBasketball" id="" value="4")
+                  label(class="form-check-label" for="") Year ago
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="lastPartInBasketball" id="" value="2")
+                  label(class="form-check-label" for="") Decade
+          
+          fieldset(class="form-group")
+            div(class="row")
+              legend(class="col-form-label col-sm-10 pt-0") Health issues:
+              div(class="col-sm-10")
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="health" id="" value="10" checked)
+                  label(class="form-check-label" for="") Perfectly healthy
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="health" id="" value="8")
+                  label(class="form-check-label" for="") Minor problems
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="health" id="" value="4")
+                  label(class="form-check-label" for="") Major problems
+                div(class="form-check")
+                  input(class="form-check-input" type="radio" name="health" id="" value="2")
+                  label(class="form-check-label" for="") Risky
+          
+        
+          h2.display-5.m-b-2 Skills
+          div.form-group
+            label(for='power') Power:
+            input#age.form-control(type='number' min='1' max='10' placeholder='1 to 10' name='power')
+          div.form-group
+            label(for='speed') Speed:
+            input#weight.form-control(type='number' min='1' max='10' placeholder='1 to 10' name='speed')
+          div.form-group
+            label(for='stamina') Stamina:
+            input#height.form-control(type='number' min='1' max='10' placeholder='1 to 10' name='stamina')
+          
+          h2.display-5.m-b-2 Basketball Skills
+          div.form-group
+            label(for='handling') Handling:
+            input#age.form-control(type='number' min='1' max='10' placeholder='1 to 10' name='handling')
+          div.form-group
+            label(for='offense') Offense:
+            input#weight.form-control(type='number' min='1' max='10' placeholder='1 to 10' name='offense')
+          div.form-group
+            label(for='defense') Defense:
+            input#height.form-control(type='number' min='1' max='10' placeholder='1 to 10' name='defense')
+          div.form-group
+            label(for='teamplay') Teamplay:
+            input#height.form-control(type='number' min='1' max='10' placeholder='1 to 10' name='teamplay')
+          div.form-group
+            label(for='individualSkill') Individual Skill:
+            input#height.form-control(type='number' min='1' max='10' placeholder='1 to 10' name='individualSkill')
+          input(id='rolePref' type='hidden' name='rolePreference')
+          h3.display-5.m-b-2 Role Preference
+          ol#sortable
+            li.ui-state-default
+              span.ui-icon.ui-icon-arrowthick-2-n-s
+              | Guard
+            li.ui-state-default
+              span.ui-icon.ui-icon-arrowthick-2-n-s
+              | Forward
+            li.ui-state-default
+              span.ui-icon.ui-icon-arrowthick-2-n-s
+              | Post
+            li.ui-state-default
+              span.ui-icon.ui-icon-arrowthick-2-n-s
+              | Referee
+          button.btn.btn-primary(type='submit' id="buton") Sign up
+  script(src="/client.js")

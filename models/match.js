@@ -1,13 +1,10 @@
-const Player = require('./player')
-module.exports = class Match {
-    constructor(sport, opponents, location, date) {
-        this.sport = sport
-        this.opponents = [opponents]
-        this.location = location
-        this.date = date
-    }
+const Mongoose = require('mongoose')
 
-    static create({sport, opponents, location, date}){
-        return new Match(sport, opponents, location, date)
-    }
-}
+const MatchSchema = new Mongoose.Schema({
+    teams: [{
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'Team'
+    }]
+})
+
+module.exports = Mongoose.model('Match', MatchSchema)

@@ -1,8 +1,9 @@
-extends layout
+extends partials/header
 
 block content
-    h1 Welcome to the "Become a Legend!"
-    p 
+  .jumbotron
+    h1.display-4 Welcome to the "Become a Legend!"
+    p.lead
       | Platform for doing sports with people while 
       | keeping track of your performance. 
       | It is designed for amateur sportsman who 
@@ -12,5 +13,7 @@ block content
       | Organize sport events, between teams or 
       | other sport lovers. Compete in a league
       | in any sport with your team or solo.
-
-    h2 You can be a legend!
+    hr.my-4
+    p
+      | You can be a legend!
+    a.btn.btn-primary.btn-lg(href='/register', role='button') Learn more

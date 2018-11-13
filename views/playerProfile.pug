@@ -1,13 +1,44 @@
-extends layout
+extends partials/header
 
 block content
-    h1 Here is the #{ player.name}
     //each player in players
-    p -----------------
-    h4 #{player.name} #{player.surname} - Age: #{player.age}
-    img(src=player.picture)
-    p Sports:
-    ul
-    each sport in player.sports
-        li #{sport.name}
+    .container
+        .card
+            .card-body
+                .row
+                    .col-3
+                        h4 #{player.name} #{player.surname}
+                        img(src=player.imageURL)
+                        hr.style-six
+                        h6 Role Preference:
+                        ol.list-group   
+                            each preference in player.rolePreference
+                                li.list-group-item #{preference}
+                    .col-4
+                        if player.quizEvaluation == null
+                            a(href = '/player/' + player.id + '/quiz') Take Quiz to play
+                        else
+                            h4 Your Points
+                            ul.list-group
+                                li.list-group-item Last Participation in any Sport: #{player.quiz.lastPartInSport}
+                                li.list-group-item Last Participation in Basketball: #{player.quiz.lastPartInBasketball}
+                                li.list-group-item Health condition: #{player.quiz.health}
+                                li.list-group-item Power: #{player.quiz.power}
+                                li.list-group-item Speed: #{player.quiz.speed}
+                                li.list-group-item Stamina: #{player.quiz.stamina}
+                                li.list-group-item Handling: #{player.quiz.handling}
+                                li.list-group-item Offense: #{player.quiz.offense}
+                                li.list-group-item Defense: #{player.quiz.defense}
+                                li.list-group-item Teamplay: #{player.quiz.teamplay}
+                                li.list-group-item Individual Skill: #{player.quiz.individualSkill}
+                                li.list-group-item
+                                    h4.alert.alert-primary Your rating is: #{player.quizEvaluation}
+                    .col-2
+                        hr
+                        a.btn.btn-secondary(href='/player/all') Get back to all players
+                        a.btn.btn-primary(href='/daily-event/all') Attend to the incoming daily event!
+
+    
+    
+
       

@@ -1,46 +1,68 @@
 const PlayerService = require('./services/player-service')      
-      SportService = require('./services/sport-service')      
-      MatchService = require('./services/match-service')      
-      LeagueService = require('./services/league-service')      
-      TeamService = require('./services/team-service')      
-
+const TeamService = require('./services/team-service')
+const DailyEventService = require('./services/dailyEvent-service')
+const mongoose    = require('mongoose')
+const Faker = require('faker')
+      
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 
+mongoose.connect('mongodb://localhost/become-a-legend', { useNewUrlParser: true })
+.then(()=> {
+    console.log('You did it! Your MongoDB is running.')
+}).catch(err => {
+    console.error('Something went wrong!')
+    console.error(err)
+})
+
 app.set('view engine', 'pug')
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static(__dirname + "/public"))
+
+//================== Index Endpoints ===============
 
 //landing page
 app.get('/', (req, res) => {
     res.render('index')
 })
 
-//Find all sports
-app.get('/sport/all', async (req, res) => {
-    const sports = await SportService.read('./database/Sports.json')
-    //console.log(sports)
-    res.render('sport', { sports })
+//show registration form
+app.get('/register', (req, res) => {
+    res.render('preRegistration')
 })
+
+//post registration form 
+app.post('/register', async (req, res) => {
+    const player = await PlayerService.add({
+        name: req.body.name,
+        surname: req.body.surname,
+        email: req.body.email
+    })
+    res.redirect('/player/' + player._id)
+})
+
+
+
+//================== Player Endpoints ===============
 
 //Find all Players
 app.get('/player/all', async (req, res) => {
     const players = await PlayerService.findAll()
-    //console.log(players)
-    res.render('player', { players })
+    res.render('player', { players: players })
 })
 
 //Add a Player
 app.post('/player', async (req, res) => {
     const player = await PlayerService.add(req.body)
-    //console.log(req.body)
     res.send(player)
 })
 
 //Find a player
 app.get('/player/:id', async (req, res) => {
     const player = await PlayerService.find(req.params.id)
-    //console.log(player)
+    //console.log(player.quizEvaluation !== null)
     res.render('playerProfile', { player })
 })
 
@@ -51,7 +73,29 @@ app.delete('/player/:id', async (req, res) => {
     res.send(playerId)
 })
 
-//Find all teams
+//Player Identity form
+app.get('/player/:id/quiz', async (req, res) => {
+    const player = await PlayerService.find(req.params.id)
+    res.render('playerQuizForm', { player })
+})
+
+//Player Identity form post
+app.post('/player/:id/quiz', (req, res) => {
+    const quizData = req.body
+    quizData.rolePreference = quizData.rolePreference.split(',')
+    PlayerService.takeQuiz(quizData, req.params.id)
+    res.redirect('/player/' + req.params.id)
+})
+
+//Attend to an Event
+app.post('/player/:playerId/attend/daily-event/:eventId', async (req, res) => {
+    await PlayerService.attendToEvent(req.params.playerId, req.params.eventId)
+    res.redirect('/daily-event/' + req.params.eventId)
+})
+
+//================== Team Endpoints ===============
+
+//Find all teams 
 app.get('/team/all', async (req, res) => {
     const teams = await TeamService.findAll()
     //console.log(teams)
@@ -60,7 +104,9 @@ app.get('/team/all', async (req, res) => {
 
 //Add a team
 app.post('/team', async (req, res) => {
-    const team = await TeamService.add()
+    await TeamService.add({
+        name: Faker.random.word
+    })
     //console.log(team)
     res.send(team)
 })
@@ -79,118 +125,29 @@ app.delete('/team/:id', async (req, res) => {
     res.send(teamId)
 })
 
+//================== Daily Tournament Endpoints ===============
+app.get('/daily-event/all', async (req, res) => {
+    const dailyEvents = await DailyEventService.findAll().catch(err => {
+        console.log(err)
+    })
+    res.render('event', { dailyEvents })
+})
+
+app.post('/daily-event', async (req, res) => {
+    await DailyEventService.add({
+        name: 'mahmut',
+        date: Date.now()
+    })
+})
+
+//show the main page of a daily Tournament
+app.get('/daily-event/:id', async (req, res) => {
+    const dailyEvent = await DailyEventService.find(req.params.id)
+    res.render('eventProfile', { dailyEvent })
+})
+
+//show the main page of a daily Tournament
+
 app.listen(3000, () => {
     console.log('Server listening')
 })
-
-
-      
-// const football = new Sport('Football')
-//       tableTennis = new Sport('Table Tennis')
-//       basketball = new Sport('Basketball')
-//       chess = new Sport('Chess')
-
-// const premierLeague = new League('Premier League', football)
-
-
-// football.addLeague(premierLeague)
-
-
-
-// const gorkem = new Player('Görkem', 'Tosun', 28)
-//       mehmet = new Player('Mehmet', 'Akif', 32)
-//       cagatay = new Player('Cagatay', 'Cavus', 29)
-
-// const lakers = new Team('Lakers', basketball )
-//       besiktas = new Team('Besiktas', football)
-//       wizards = new Team('Wizards', basketball)
-
-// premierLeague.addTeam(besiktas)
-// premierLeague.addTeam(lakers)
-
-
-
-// gorkem.play(football)
-// gorkem.play(basketball)
-
-// mehmet.play(football)
-// mehmet.play(chess)
-
-// cagatay.play(football)
-// cagatay.play(tableTennis)
-
-// gorkem.joinTeam(lakers)
-// cagatay.joinTeam(lakers)
-// mehmet.joinTeam(besiktas)
-
-
-// // console.log(football)
-
-
-
-// // const match1 = new Match(basketball, [lakers, wizards], 'Staples Center', '21 March - 21:00' )
-
-
-// /*
-// Saving all class instances
-
-// It is not important the sequence of the saving process. However it is important to wait until 
-// the whole save process is finished. That's why I put all the save methods into one promise.
-// */
-// const saveAll = function() {
-//     return new Promise((resolve, reject) => {
-//         console.log('1')
-//         const players = [gorkem, cagatay, mehmet]
-//         DbPlayer.save(players)
-        
-//         console.log('2')
-//         const sports = [football, tableTennis, basketball, chess]
-//         DbSport.save(sports)
-        
-//         console.log('3')
-//         const matches = [match1]
-//         DbMatch.save(matches)
-        
-//         console.log('4')
-//         const leagues = [premierLeague]
-//         DbLeague.save(leagues)
-        
-//         console.log('5')
-//         const teams = [lakers, besiktas, wizards]
-//         DbTeam.save(teams)
-
-//         resolve()
-//     })
-// }
-
-// const saveAndRead = async () => {
-
-//     //We should save all first
-//     await saveAll()
-   
-//     //Then read.
-//     console.log('6')
-//     const contentsPlayers = await DbPlayer.read('./database/Players.json')
-//     console.log(contentsPlayers)
-
-//     console.log('7')
-//     const contentsSports = await DbSport.read('./database/Sports.json')
-//     console.log(contentsSports)
-
-//     console.log('8')
-//     const contentsMatches = await DbMatch.read('./database/Matches.json')
-//     console.log(contentsMatches)
-
-//     console.log('9')
-//     const contentsTeams = await DbTeam.read('./database/Teams.json')
-//     console.log(contentsTeams)
-
-//     console.log('10')
-//     const contentsLeagues = await DbLeague.read('./database/Leagues.json')
-//     console.log(contentsLeagues)
-// }
-
-// saveAndRead()
-
-
-

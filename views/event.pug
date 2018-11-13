@@ -1,0 +1,9 @@
+extends partials/header
+
+block content
+    each dailyEvent in dailyEvents
+        p #{dailyEvent.name}
+        pre #{JSON.stringify(dailyEvent, null, 4)}
+        form(method='POST' action='/player/5be4f85da111bb2b2c611e2a/attend/daily-event/' + dailyEvent._id)
+            button(type='submit') katıl
+      

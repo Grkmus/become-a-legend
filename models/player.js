@@ -1,38 +1,31 @@
 const Match = require('./match')
+const Mongoose = require('mongoose')
 
-module.exports = class Player {
-    constructor(name, surname, age, id) {
-        this.name = name
-        this.surname = surname
-        this.age = age
-        this.id = id
-    }
-    
-    play(sport) {
-        this.sports.push(sport)
-        sport.players.push(this)
-    }
+const PlayerSchema = new Mongoose.Schema({
+    name: String,
+    surname: String,
+    email: String,
+    imageURL: String,
+    age: Number,
+    weight: Number,
+    height: Number,
+    location: String,
+    telephone: String,
+    quiz: {
+        lastPartInSport: Number,
+        lastPartInBasketball: Number,
+        health: Number,
+        power: Number,
+        speed: Number,
+        stamina: Number,
+        handling: Number,
+        offense: Number,
+        defense: Number,
+        teamplay: Number,
+        individualSkill: Number,
+    },
+    quizEvaluation: Number,
+    rolePreference: Array
+})
 
-    joinTeam(team) {
-        this.teams.push(team)
-        team.players.push(this)
-    }
-
-    createTeam(name, sport) {
-        if (this.sports.includes(sport)) {
-            Team.create({name: name, sport: sport})
-        } else {
-            console.log('You can not create a team in a sport that you dont play!!')
-        }
-        
-    }
-
-    inviteToTeam(player) {
-
-    }
-
-    
-    static create({ name, surname, age, id }) {
-        return new Player(name, surname, age, id)
-    }
-}
+module.exports = Mongoose.model('Player', PlayerSchema)
