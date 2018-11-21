@@ -1,14 +1,12 @@
 const Player = require('./models/player')
-      Sport = require('./models/sport')
-      Team = require('./models/team')
-      Match = require('./models/match')
-      League = require('./models/league')
-      DbPlayer = require('./services/player-service')      
-      DbSport = require('./services/sport-service')      
-      DbMatch = require('./services/match-service')      
-      DbLeague = require('./services/league-service')      
-      DbTeam = require('./services/team-service')
-      Faker = require('faker')
+const Team = require('./models/team')
+const Match = require('./models/match')
+const DbPlayer = require('./services/player-service')      
+const DbSport = require('./services/sport-service')      
+const DbMatch = require('./services/match-service')      
+const DbLeague = require('./services/league-service')      
+const DbTeam = require('./services/team-service')
+const Faker = require('faker')
       
 const Mongoose = require('mongoose')
 
@@ -40,21 +38,35 @@ All players has random name, surname and age. Sports property is being created b
 */
 // const players = []
 
-
-for (let i = 0; i < 50; i++) {
-    const player = {
-        name: Faker.name.firstName(),
-        surname: Faker.name.lastName(),
-        email: Faker.internet.email(),
-        imageURL: Faker.internet.avatar(),
-        // age: Faker.random.number({ min: 10, max: 50 }),
-        // weight: Faker.random.number({ min:20, max: 150 }),
-        // height: Faker.random.number({ min:100, max: 250 }),
-        // location: Faker.address.city(),
-        // telephone: Faker.phone.phoneNumber()
+async function seed() {
+    for (let i = 0; i < 50; i++) {
+        const player = {
+            name: Faker.name.firstName(),
+            surname: Faker.name.lastName(),
+            email: Faker.internet.email(),
+            imageURL: Faker.internet.avatar(),
+            age: Faker.random.number({ min: 10, max: 50 }),
+            weight: Faker.random.number({ min:20, max: 150 }),
+            height: Faker.random.number({ min:100, max: 250 }),
+            location: Faker.address.city(),
+            telephone: Faker.phone.phoneNumber(),
+            ratingsByOwn: {
+                power: Faker.random.number({ min: 1, max: 10 }),
+                speed: Faker.random.number({ min: 1, max: 10 }),
+                stamina: Faker.random.number({ min: 1, max: 10 }),
+                handling: Faker.random.number({ min: 1, max: 10 }),
+                offense: Faker.random.number({ min: 1, max: 10 }),
+                defense: Faker.random.number({ min: 1, max: 10 }),
+                teamplay: Faker.random.number({ min: 1, max: 10 }),
+                individualSkill: Faker.random.number({ min: 1, max: 10 }),
+            }
+        }
+        player.ratingEvaluation = await DbPlayer.evaluateQuiz(player.ratingsByOwn)
+        Player.create(player)
     }
-    Player.create(player)
 }
+
+seed()
     
     // player.picture = Faker.internet.avatar()
     // //determining how many sport does someone play randomly in the below line

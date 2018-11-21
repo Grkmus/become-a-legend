@@ -1,6 +1,6 @@
 const Mongoose = require('mongoose')
 
-const DailyTournamentSchema = new Mongoose.Schema({
+const DailyEventSchema = new Mongoose.Schema({
     name: String,
     date: Date,
     teams: [{
@@ -18,7 +18,11 @@ const DailyTournamentSchema = new Mongoose.Schema({
     attendees: [{
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'Player'
+    }],
+    attendeesToBeSelected: [{
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'Player'
     }]
 })
 
-module.exports = Mongoose.model('DailyEvent', DailyTournamentSchema)
+module.exports = Mongoose.model('DailyEvent', DailyEventSchema)

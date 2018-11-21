@@ -4,7 +4,8 @@
   "description": "\"Platform for doing sports with people while keeping track of your performance\"",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc ava --verbose",
+    "test-watch": "ava --verbose --watch"
   },
   "repository": {
     "type": "git",
@@ -29,5 +30,10 @@
     "faker": "^4.1.0",
     "mongoose": "^5.3.10",
     "pug": "^2.0.3"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "nyc": "^13.1.0",
+    "supertest": "^3.3.0"
   }
 }

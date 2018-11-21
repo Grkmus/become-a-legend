@@ -11,10 +11,7 @@ const PlayerSchema = new Mongoose.Schema({
     height: Number,
     location: String,
     telephone: String,
-    quiz: {
-        lastPartInSport: Number,
-        lastPartInBasketball: Number,
-        health: Number,
+    ratingsByOwn: {
         power: Number,
         speed: Number,
         stamina: Number,
@@ -24,7 +21,8 @@ const PlayerSchema = new Mongoose.Schema({
         teamplay: Number,
         individualSkill: Number,
     },
-    quizEvaluation: Number,
+    ratingEvaluation: Number,
+    credit: Number,
     rolePreference: Array
 })
 

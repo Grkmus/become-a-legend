@@ -1,42 +1,24 @@
 const PlayerModel = require('../models/player')
 const DailyEventService = require('../services/dailyEvent-service')
 
-async function takeQuiz(data, id) {
-    console.log(data['age']);
-    const player = {
-        age: data['age'],
-        height: data['height'],
-        weight: data['weight'],
-        location: data['location'],
-        telephone: data['telephone'],
-        rolePreference: data['rolePreference'],
-        quiz: {
-            lastPartInSport: data['lastPartInSport'],
-            lastPartInBasketball: data['lastPartInBasketball'],
-            health: data['health'],
-            power: data['power'],
-            speed: data['speed'],
-            stamina: data['stamina'],
-            handling: data['handling'],
-            offense: data['offense'],
-            defense: data['defense'],
-            teamplay: data['teamplay'],
-            individualSkill: data['individualSkill'],
-        }
-        
-    }
-    player.quizEvaluation = await evaluateQuiz(player.quiz)
-    await PlayerModel.findOneAndUpdate({_id:id}, player)
+async function takeQuiz(data) {
+    data.ratingEvaluation = await evaluateQuiz(data.ratingsByOwn)
+    return data
 }
 
-async function evaluateQuiz(quiz) {
-    valuesList = Object.values(quiz)
-    var element = 0
-    for (let i = 0; i < valuesList.length; i++) {
-        element += +valuesList[i];
-    }
-    element /= valuesList.length
-    return element.toFixed(2)
+async function update(playerId, data) {
+    return PlayerModel.findOneAndUpdate({ _id: playerId }, data, { new: true })
+}
+async function evaluateQuiz(quiz){
+    return new Promise((resolve, reject) => {
+        valuesList = Object.values(quiz)
+        var element = 0
+        for (let i = 0; i < valuesList.length; i++) {
+            element += +valuesList[i];
+        }
+        element /= valuesList.length
+        resolve(element.toFixed(2))
+    })
 }
 
 async function findAll() {
@@ -47,42 +29,23 @@ async function add(player) {
     return PlayerModel.create(player)
 }
 
+
 async function del(playerId) {
-    return PlayerModel.remove({ playerId })
+    return PlayerModel.deleteOne({ _id: playerId })
 }
 
 async function find(playerId) {
-    return PlayerModel.findById(playerId)
+    return PlayerModel.findOne({ _id: playerId })
 }
 
-async function addPlayerToTeam(playerId, teamId) {
-    const player = await find(playerId)
-    const team = await TeamService.find(teamId)
-    team.players.push(player)
-    return team
-}
 
-async function attendToEvent(playerId, eventId) {
-    const player = await find(playerId)
-    const event = await DailyEventService.find(eventId)
-    console.log(event)
-    const isInArray = event.attendees.some((attendeeId) => {
-        return attendeeId.equals(player._id)
-    })
-    if (!isInArray) {
-        event.attendees.push(player)
-        return await event.save()
-    } else {
-        console.log('player already in the list')
-    }
-        
-}
 
 module.exports = {
     findAll,
     find,
     add,
     del,
+    update,
     takeQuiz,
-    attendToEvent
+    evaluateQuiz
 }
