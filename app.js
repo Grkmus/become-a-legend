@@ -6,7 +6,9 @@ const Faker = require('faker')
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
+const cors = require('cors')
 
+app.use(cors())
 require('./mongo-connection')
 
 app.set('view engine', 'pug')
@@ -33,7 +35,7 @@ app.post('/register', async (req, res) => {
         surname: req.body.surname,
         email: req.body.email
     })
-    res.redirect('/player/' + player._id)
+    res.send(player)
 })
 
 //================== Player Endpoints ===============
@@ -134,9 +136,19 @@ app.get('/daily-event/all', async (req, res) => {
 //create an event
 app.post('/daily-event', async (req, res) => {
     const dailyEvent = await DailyEventService.add(req.body)
-    DailyEventService.phase1(dailyEvent._id)
+    try {
+        DailyEventService.phase1(dailyEvent._id, req.body.date)
+    } catch (error) {
+        console.log(error)
+    }
+    
     res.send(dailyEvent)
 })
+
+// app.post('/daily-event/phase2', async (req, res) => {
+//     const dailyEvent = DailyEventService.phase2(req.body)    
+//     res.send(dailyEvent)
+// })
 
 
 //get an event
@@ -145,8 +157,15 @@ app.get('/daily-event/:id', async (req, res) => {
     res.send(dailyEvent)
 })
 
+//delete an event
+app.delete('/daily-event/:id', async (req, res) => {
+    await DailyEventService.del(req.params.id)
+})
+
 //Add attendee to an event
 app.post('/daily-event/:_id/attendee', async (req, res) => {
+    // console.log(req.params._id + 'eventOd')
+    // console.log(req.body._id)
     const dailyEvent = await DailyEventService.addAttendee(req.params._id, req.body._id)
     res.send(dailyEvent)
 })

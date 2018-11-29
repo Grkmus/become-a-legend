@@ -29,7 +29,7 @@ test('Register a Player', async t => {
         .post('/register')
         .send(player)
 
-    t.is(playerCreatedRes.status, 302)
+    t.is(playerCreatedRes.status, 200)
 })
 
 

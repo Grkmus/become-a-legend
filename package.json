@@ -26,10 +26,12 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "circular-json": "^0.5.9",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "faker": "^4.1.0",
     "mongoose": "^5.3.10",
-    "pug": "^2.0.3"
+    "pug": "^2.0.3",
+    "vue": "^2.5.17"
   },
   "devDependencies": {
     "ava": "^0.25.0",

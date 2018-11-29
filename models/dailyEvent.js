@@ -7,10 +7,7 @@ const DailyEventSchema = new Mongoose.Schema({
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'Team'
     }],
-    location: [{
-        type: Mongoose.Schema.Types.ObjectId,
-        ref: 'Location'
-    }],
+    location: String,
     matches: [{
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'Match'
@@ -22,7 +19,8 @@ const DailyEventSchema = new Mongoose.Schema({
     attendeesToBeSelected: [{
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'Player'
-    }]
+    }],
+    phase: String
 })
 
 module.exports = Mongoose.model('DailyEvent', DailyEventSchema)

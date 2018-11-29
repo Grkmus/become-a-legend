@@ -1,7 +1,5 @@
-extends partials/header
-
-block content
-  .jumbotron
+<template lang='pug'>
+.jumbotron
     h1.display-4 Welcome to the "Become a Legend!" {{username}}
     p.lead
       | Platform for doing sports with people while 
@@ -16,4 +14,23 @@ block content
     hr.my-4
     p
       | You can be a legend! {{name}}
-    a.btn.btn-primary.btn-lg(href='/register', role='button') Learn more
+    router-link.btn.btn-primary.btn-lg(to='/about', role='button') Learn more
+</template>
+
+<script>
+
+export default {
+  name: 'landing',
+}
+</script>
+
+<style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>

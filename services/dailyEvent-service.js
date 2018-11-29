@@ -39,25 +39,31 @@ async function addAttendee(eventId, attendeeId) {
 
 
 
-async function phase1(eventId) {
+async function phase1(eventId, date) {
+    const duration = date - Date.now()
     //Wait attendees to join for one week
+    // console.log('phase1')
     return new Promise(async (resolve, reject) => {
-        let event = await find(eventId)
         setTimeout(async () => {
+            const event = await find(eventId)
+            console.log(event.attendees.length)
             if (event.attendees < 12) {
                 await del(event._id)
                 reject(new Error('not enough participant'))
             } else {
+                event.phase = 'phase1'
+                await event.save()
                 phase2(event)
                 resolve('ok')
             }
-        }, 10000);
+        }, duration);
     })
 }
 
 
 async function phase2(event) {
     //Generate the teams and select the captains
+    // console.log('phase2')
     event.attendees.sort((a,b) =>  //c/o Marco Demaio https://goo.gl/APQFAS
         (a.ratingEvaluation > b.ratingEvaluation) ? -1 : ((b.ratingEvaluation > a.ratingEvaluation) ? 1 : 0)); 
     
@@ -71,11 +77,11 @@ async function phase2(event) {
         event.attendeesToBeSelected.splice(event.attendeesToBeSelected.indexOf(event.attendees[i]))
         await team.save()
     }
-
-    phase3(event)
+    
+    calculateCaptainCredits(event)
 }
 
-async function phase3(event) {
+async function calculateCaptainCredits(event) {
     //Calculation of credit that each captain get
     // let totalPoint = 0 
     // event.attendees.forEach(attendee => {
@@ -92,8 +98,9 @@ async function phase3(event) {
         captain.credit = (pointForEachCaptain - captain.ratingEvaluation).toFixed(2)
         await captain.save()
     })
-
-    await event.save()
+    event.phase = 'phase2'
+    event = await event.save()
+    return event
 }
 
 async function captainPicksPlayer(eventId, teamId, playerId) {
@@ -101,7 +108,7 @@ async function captainPicksPlayer(eventId, teamId, playerId) {
     const event = await find(eventId)
     const player = await PlayerModel.findOne({ _id: playerId })
     event.attendeesToBeSelected.splice(event.attendeesToBeSelected.indexOf(player))
-    return await event.save()
+    await event.save()
 }
 
 

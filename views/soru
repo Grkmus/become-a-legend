@@ -1,0 +1,6 @@
+Hello everyone,
+I was writing my tests for my endpoints and I encountered to an interesting situation that 
+I couldn't wrap my head around. I have players and events classes and my event class is not needed to
+be created through a post request. Because it will be created through the application automatically. So,instead of calling a post request to create an event object like event = { name: 'basketball' },
+ I am only calling the function located in the service file which is just DailyEventService.add(event).
+And if I do smth like t.deepEqual(eventToFind, eventToCreate) it fails. I couldn't understand why it is failing. When I log both objects, they seem like same. Also, post request is eventually calling the add function which is in the service file. 
