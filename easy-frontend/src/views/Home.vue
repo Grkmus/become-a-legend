@@ -1,5 +1,5 @@
 <template lang='pug'>
-div.container-fluid
+div.container
   div.row
       div.col-sm-9
           h4 Players
@@ -10,15 +10,15 @@ div.container-fluid
           //- button(@click='createEvent') createEvent
           h4 Upcoming Events
           button(@click='createEvent') createEvent
-          button(@click='attend') Attend
+          //- button(@click='attend') Attend
           div.list-group(v-for='event in events')
-              event(:data='event')
+              dailyEvent(:data="event" :key="event._id" v-if='event._id')
               hr
 </template>
 
 <script>
 import Player from '@/components/PlayerCard.vue'
-import Event from '@/components/EventCard.vue'
+import dailyEvent from '@/components/EventCard.vue'
 import axios from 'axios'
 import Faker from 'faker'
 
@@ -27,7 +27,24 @@ export default {
   created(){
       this.fetchPlayers()
       this.fetchEvents()
-    },
+      
+  },
+  mounted() {
+      this.$eventBus.$on('deleteTheEvent', index => {
+        this.events.splice(index, 1)  
+      })
+      // this.$eventBus.$on('timeIsUp', async (index) => {
+      //   // this.events.splice(index, 1)
+      //   setTimeout(()=> {}, 1000)
+      //   const event = (await axios.get(`http://localhost:5000/daily-event/${this.events[index]._id}`)).data
+      //   if (event.phase == 'phase2') {
+      //     this.events[index] = event  
+      //   } else {
+      //     this.events.splice(index, 1) 
+      //   }
+
+      // })
+  },
   data(){
     return {
       players: [],
@@ -37,7 +54,7 @@ export default {
   },
   components: {
     Player,
-    Event
+    dailyEvent
   },
   methods: {
     fetchPlayers: async function(){
@@ -49,16 +66,17 @@ export default {
       this.events = res.data
     },
     createEvent: async function(){
-      const res = await axios.post('http://localhost:5000/daily-event', {name: 'basketball', date: (Date.now() + 10000), phase: 'phase1', location: 'Ülker Arena'})
+      const res = await axios.post('http://localhost:5000/daily-event', {name: 'basketball', date: Date.now(), location: 'Ülker Arena'})
       this.eventId = res.data._id
       this.events.push(res.data)
     },
-    attend: async function(){
-            for (let i = 0; i < 12; i++) {
-              await axios.post(`http://localhost:5000/daily-event/${this.eventId}/attendee`,{_id: this.players[i]._id})
-            }
-        }
-  }
+    // deleteTheEvent: function(index) {
+    //   console.log('deleteTheEvent den selamlar', index)
+    //   console.log('deleteTheEvent den selamlar', index)
+      
+    //   console.log(this.events,this.events.length)
+    // }
+  },
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template lang='pug'>
 .jumbotron
-    h1.display-4 Welcome to the "Become a Legend!" {{username}}
+    h1.display-4 Welcome to the "Become a Legend!" 
     p.lead
       | Platform for doing sports with people while 
       | keeping track of your performance. 
@@ -13,7 +13,7 @@
       | in any sport with your team or solo.
     hr.my-4
     p
-      | You can be a legend! {{name}}
+      | You can be a legend! 
     router-link.btn.btn-primary.btn-lg(to='/about', role='button') Learn more
 </template>
 

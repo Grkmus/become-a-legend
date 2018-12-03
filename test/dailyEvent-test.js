@@ -46,7 +46,7 @@ test('Fetch an event', async t => {
     t.deepEqual(eventToFind, eventToCreate)
 })
 
-test('add an attendee', async t => {
+test('add an attendee who answered the quiz', async t => {
     const event = {name: 'eventLastly'}
 
     const eventToCreate = (await request(app)
@@ -64,6 +64,26 @@ test('add an attendee', async t => {
     
     t.not(res.body.ratingEvaluation, undefined || null)
     t.is(res.status, 200)
+
+})
+
+test('same attendee tries to attend again', async t => {
+    const event = {name: 'eventLastly'}
+    const eventToCreate = (await request(app)
+        .post('/daily-event')
+        .send(event)).body
+
+    const player = (await request(app)
+            .post('/player')
+            .send({
+                name: faker.name.firstName(),
+                ratingEvaluation : faker.random.number({ min: 1, max: 10 })
+            })).body
+
+    const res = await request(app).post(`/daily-event/${eventToCreate._id}/attendee`).send(player)
+    
+    const resAgain = await request(app).post(`/daily-event/${eventToCreate._id}/attendee`).send(player)
+    t.is(resAgain.status, 500)
 
 })
 
@@ -197,12 +217,6 @@ test('Captain selects a player', async t => {
     t.is(teamRes.body.players.length + 1, teamResAfterPicking.body.players.length)
     
 })
-
-const timeout = (t, ms) => {
-	setTimeout(() => {
-		t.fail('Timeout exceeded')
-	}, ms)
-}
 
 test('phase1 not enough attendee', async t => {
     let eventToCreate = await DailyEventService.add({name: 'eventDirect'})

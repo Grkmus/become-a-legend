@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "faker": "^4.1.0",
     "pug-plain-loader": "^1.0.0",
     "vue": "^2.5.17",
     "vue-router": "^3.0.2"

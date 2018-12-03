@@ -17,7 +17,7 @@ async function evaluateQuiz(quiz){
             element += +valuesList[i];
         }
         element /= valuesList.length
-        resolve(element.toFixed(2))
+        resolve(element)
     })
 }
 

@@ -30,11 +30,7 @@ app.get('/register', (req, res) => {
 
 //post registration form 
 app.post('/register', async (req, res) => {
-    const player = await PlayerService.add({
-        name: req.body.name,
-        surname: req.body.surname,
-        email: req.body.email
-    })
+    const player = await PlayerService.add(req.body)
     res.send(player)
 })
 
@@ -109,6 +105,11 @@ app.post('/team', async (req, res) => {
     //console.log(team)
     res.send(team)
 })
+//update a team
+app.put('/team/:id', async (req, res) => {
+    const team = await TeamService.update(req.params.id, req.body)
+    res.send(team)
+})
 
 //find a team
 app.get('/team/:id', async (req, res) => {
@@ -136,21 +137,25 @@ app.get('/daily-event/all', async (req, res) => {
 //create an event
 app.post('/daily-event', async (req, res) => {
     const dailyEvent = await DailyEventService.add(req.body)
-    try {
-        DailyEventService.phase1(dailyEvent._id, req.body.date)
-    } catch (error) {
-        console.log(error)
-    }
-    
+    // try {
+    //     DailyEventService.phase1(dailyEvent._id, req.body.date)
+    // } catch (error) {
+    //     console.log(error)
+    // }
     res.send(dailyEvent)
 })
 
-// app.post('/daily-event/phase2', async (req, res) => {
-//     const dailyEvent = DailyEventService.phase2(req.body)    
-//     res.send(dailyEvent)
-// })
+app.post('/daily-event/phase2/', async (req, res) => {
+    const dailyEvent = await DailyEventService.phase2(req.body._id)    
+    res.send(dailyEvent)
+})
 
 
+//update an event
+app.put('/daily-event/:id', async (req, res) => {
+    const dailyEvent = await DailyEventService.update(req.params.id, req.body)
+    res.send(dailyEvent)
+})
 //get an event
 app.get('/daily-event/:id', async (req, res) => {
     const dailyEvent = await DailyEventService.find(req.params.id)
@@ -166,8 +171,14 @@ app.delete('/daily-event/:id', async (req, res) => {
 app.post('/daily-event/:_id/attendee', async (req, res) => {
     // console.log(req.params._id + 'eventOd')
     // console.log(req.body._id)
-    const dailyEvent = await DailyEventService.addAttendee(req.params._id, req.body._id)
-    res.send(dailyEvent)
+    try {
+        const dailyEvent = await DailyEventService.addAttendee(req.params._id, req.body._id)
+        res.send(dailyEvent)
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+        // Promise.reject(error).then(res.sendStatus(400))
+    }
 })
 
 //get teams of the event
@@ -188,8 +199,8 @@ app.get('/daily-event/:eventId/team/:teamId/', async (req, res) => {
 
 //Captain picks a player
 app.post('/daily-event/:eventId/team/:teamId/pick', async (req, res) => {
-    await DailyEventService.captainPicksPlayer(req.params.eventId, req.params.teamId, req.body._id) 
-    res.redirect(`/daily-event/${req.params.eventId}`)
+    const event = await DailyEventService.captainPicksPlayer(req.params.eventId, req.params.teamId, req.body._id) 
+    res.send(event)
 })
 
 module.exports = app

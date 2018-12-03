@@ -20,7 +20,8 @@ const DailyEventSchema = new Mongoose.Schema({
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'Player'
     }],
-    phase: String
+    phase: { type: String, default: 'phase1' },
+    turn: { type: Number, default: 0 }
 })
 
 module.exports = Mongoose.model('DailyEvent', DailyEventSchema)

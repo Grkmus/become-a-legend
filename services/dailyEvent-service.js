@@ -1,5 +1,6 @@
 const DailyEventModel = require('../models/dailyEvent')
 const PlayerModel = require('../models/player')
+const TeamModel = require('../models/team')
 const TeamService = require('./team-service')
 const Faker = require('faker')
 
@@ -16,7 +17,10 @@ async function del(eventId) {
 }
 
 async function update(eventId, data) {
-    return DailyEventModel.findOneAndUpdate({ _id: eventId }, data, { new: true })
+    return DailyEventModel.findOneAndUpdate({ _id: eventId }, data, { new: true }).populate(['attendees', {
+        path: 'teams',
+        populate: { path: 'players' }
+    }, 'attendeesToBeSelected'])
 }
 
 async function find(eventId) {
@@ -27,14 +31,14 @@ async function find(eventId) {
 }
 
 async function addAttendee(eventId, attendeeId) {
-    let event =  await DailyEventModel.findOne({ _id: eventId }).populate(['attendees'])
+    const event =  await DailyEventModel.findOne({ _id: eventId }).populate(['attendees'])
     const attendee = await PlayerModel.findOne({ _id: attendeeId })
-
+    event.attendees.forEach(element => {
+        if(element._id.equals(attendee._id)) throw new Error('Already in the list')
+    }) 
     event.attendees.push(attendee)
     event.attendeesToBeSelected.push(attendee)
-    event = await event.save()
-
-    return event
+    return await update(event._id, event)
 }
 
 
@@ -46,7 +50,6 @@ async function phase1(eventId, date) {
     return new Promise(async (resolve, reject) => {
         setTimeout(async () => {
             const event = await find(eventId)
-            console.log(event.attendees.length)
             if (event.attendees < 12) {
                 await del(event._id)
                 reject(new Error('not enough participant'))
@@ -61,54 +64,58 @@ async function phase1(eventId, date) {
 }
 
 
-async function phase2(event) {
-    //Generate the teams and select the captains
-    // console.log('phase2')
-    event.attendees.sort((a,b) =>  //c/o Marco Demaio https://goo.gl/APQFAS
-        (a.ratingEvaluation > b.ratingEvaluation) ? -1 : ((b.ratingEvaluation > a.ratingEvaluation) ? 1 : 0)); 
-    
-    const numberOfTeams = Math.round(event.attendees.length / 3)
-    
-    for (let i = 0; i < numberOfTeams; i++) {
-       
-        const team = await TeamService.add({ name: Faker.random.word() })
-        team.players.push(event.attendees[i])
-        event.teams.push(team)
-        event.attendeesToBeSelected.splice(event.attendeesToBeSelected.indexOf(event.attendees[i]))
-        await team.save()
-    }
-    
-    calculateCaptainCredits(event)
+async function phase2(eventId) {
+    return new Promise(async (resolve, reject) => {
+        const event = await find(eventId)
+        event.attendees.sort((a,b) =>  //c/o Marco Demaio https://goo.gl/APQFAS
+            (a.ratingEvaluation > b.ratingEvaluation) ? -1 : ((b.ratingEvaluation > a.ratingEvaluation) ? 1 : 0)); 
+        
+        event.attendeesToBeSelected.sort((a,b) =>  //c/o Marco Demaio https://goo.gl/APQFAS
+            (a.ratingEvaluation > b.ratingEvaluation) ? 1 : ((b.ratingEvaluation > a.ratingEvaluation) ? -1 : 0)); 
+        
+        const numberOfTeams = Math.floor(event.attendees.length / 3)
+        
+        for (let i = 0; i < numberOfTeams; i++) {
+            const team = await TeamService.add({
+                name: Faker.random.word(),
+                players: [event.attendees[i]]
+            })
+            event.teams.push(team)
+            // const playerIndex = event.attendeesToBeSelected.indexOf(event.attendees[i])
+            event.attendeesToBeSelected.pop()
+        }
+        resolve(await calculateTeamCredits(event))
+    })
 }
 
-async function calculateCaptainCredits(event) {
+async function calculateTeamCredits(event) {
     //Calculation of credit that each captain get
-    // let totalPoint = 0 
-    // event.attendees.forEach(attendee => {
-    //     totalPoint = totalPoint + +attendee.ratingEvaluation
-    // })
-    const totalPoint = (event.attendees.reduce(( a, b ) => {
-        return {ratingEvaluation: a.ratingEvaluation + b.ratingEvaluation}
-    })).ratingEvaluation
-    
-    const pointForEachCaptain = totalPoint / event.teams.length
-    
-    event.teams.forEach(async (team) => {
-        let captain = team.players[0]
-        captain.credit = (pointForEachCaptain - captain.ratingEvaluation).toFixed(2)
-        await captain.save()
+    return new Promise(async (resolve, reject) => {
+        const totalPoint = (event.attendees.reduce(( a, b ) => {
+            return {ratingEvaluation: a.ratingEvaluation + b.ratingEvaluation}
+        })).ratingEvaluation
+        
+        const pointForEachTeam = totalPoint / event.teams.length
+        
+        event.teams.forEach(async (team) => {
+            team.credits = (pointForEachTeam - team.players[0].ratingEvaluation + 3).toFixed(2)
+            await team.save()
+        })
+        event.phase = 'phase2'
+        resolve(await update(event._id, event))
     })
-    event.phase = 'phase2'
-    event = await event.save()
-    return event
 }
 
 async function captainPicksPlayer(eventId, teamId, playerId) {
     await TeamService.addPlayerToTeam(teamId, playerId)
     const event = await find(eventId)
     const player = await PlayerModel.findOne({ _id: playerId })
-    event.attendeesToBeSelected.splice(event.attendeesToBeSelected.indexOf(player))
-    await event.save()
+    
+    const indexPlayer = event.attendeesToBeSelected.findIndex(attendee => {
+       return attendee._id.equals(player._id) 
+    })
+    event.attendeesToBeSelected.splice(indexPlayer, 1)
+    return await update(event._id, event)
 }
 
 

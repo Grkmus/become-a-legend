@@ -5,7 +5,9 @@ const TeamSchema = new Mongoose.Schema({
     players: [{
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'Player'
-    }]
+    }],
+    credits: Number
+
 })
 
 module.exports = Mongoose.model('Team', TeamSchema)

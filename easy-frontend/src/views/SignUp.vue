@@ -16,6 +16,9 @@
             label(for='email') Email:
             input.form-control(type='email', placeholder='name@email.com' name='email')
           div.form-group
+            label(for='imageURL') ImageURL:
+            input.form-control(type='url', placeholder='imageURL' name='imageURL')
+          div.form-group
             label(for='pw') Password:
             input.form-control(type='password' name='password')
           div.form-group
@@ -32,11 +35,14 @@ export default {
   methods: {
     getFormValues: async function (submitEvent) {
       const formElements = submitEvent.target.elements
+      console.log(formElements[3].value)
       const player = {
         name: formElements[0].value,
         surname: formElements[1].value,
-        email: formElements[2].value
+        email: formElements[2].value,
+        imageURL: formElements[3].value
       }
+      console.log(player)
       const res = await axios.post('http://localhost:5000/register', player )
       console.log(res.data)
       router.push({

@@ -17,6 +17,10 @@ async function find(teamId) {
     return TeamModel.findOne({ _id: teamId })
 }
 
+async function update(teamId, newTeam) {
+    return TeamModel.findOneAndUpdate({ _id: teamId }, newTeam, { new: true })
+}
+
 async function addPlayerToTeam(teamId, playerId) {
     let team = await TeamModel.findOne({ _id: teamId })
     const player = await PlayerModel.findOne({ _id: playerId})
@@ -32,5 +36,6 @@ module.exports = {
     find,
     add,
     addPlayerToTeam,
-    del
+    del,
+    update
 }
