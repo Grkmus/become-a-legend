@@ -15,20 +15,23 @@
                     .row
                         .col-sm-3
                         .col-sm-6.border-bottom#captain
-                            img.rounded-circle.mx-auto.d-block.img-fluid.img-thumbnail(:src='team.players[0].imageURL')
-                            p {{team.players[0].name}} {{team.players[0].ratingEvaluation}}
+                            .container
+                                img.rounded-circle.mx-auto.d-block.img-fluid.img-thumbnail(:src='team.players[0].imageURL')
+                                p {{team.players[0].name}} {{team.players[0].ratingEvaluation}}
                         .col-sm-3
                     .row.players
                         .col-sm-6#player1
-                            img.rounded-circle.mx-auto.d-block.img-fluid.img-thumbnail(:src='team.players[1].imageURL' v-if='team.players[1]')
-                            p(v-show='team.players[1]' v-if='team.players[1]') {{team.players[1].name}} {{team.players[1].ratingEvaluation}}
-                        .col-sm-6#player2.border-left(v-if='team.players[2]')
-                            img.rounded-circle.mx-auto.d-block.img-fluid.img-thumbnail(:src='team.players[2].imageURL')
-                            p {{team.players[2].name}} {{team.players[2].ratingEvaluation}}
+                            .container
+                                img.rounded-circle.mx-auto.d-block.img-fluid.img-thumbnail(:src='team.players[1].imageURL' v-if='team.players[1]')
+                                p(v-show='team.players[1]' v-if='team.players[1]') {{team.players[1].name}} {{team.players[1].ratingEvaluation}}
+                        .col-sm-6#player2(v-if='team.players[2]')
+                            .container
+                                img.rounded-circle.mx-auto.d-block.img-fluid.img-thumbnail(:src='team.players[2].imageURL')
+                                p {{team.players[2].name}} {{team.players[2].ratingEvaluation}}
                 .col-sm-4#credits.border-left
                     p remaining credits
-                    h2 {{team.credits}}
-                    button.btn.btn-primary(@click='skipTheTurn' v-if="isActive") Skip turn
+                    h3 {{team.credits}}
+                    button.btn.btn-primary(@click="$emit('skipTheTurn', team._id)" v-if="isActive") Skip turn
 
 </template>
 <style>

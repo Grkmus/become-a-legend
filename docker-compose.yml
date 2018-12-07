@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo
+    ports: 
+      - "32770:27017"
+
+  backend:
+    build: backend
+    ports:
+      - "5000:5000"
+    restart: always
+    labels:
+      - "traefik.frontend.rule=Host:backend.docker.localhost"
+  frontend:
+    build: frontend
+    labels:
+      - "traefik.frontend.rule=Host:frontend.docker.localhost"
+    ports:
+      - '8080:8080'
+
+  proxy:
+    image: traefik
+    command: --docker # Tells Traefik to listen to docker
+    ports:
+      - "8090:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events

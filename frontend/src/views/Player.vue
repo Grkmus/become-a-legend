@@ -72,7 +72,7 @@
                 p Web Developer and Designer
           #profile.tab-pane.fade(role='tabpanel', aria-labelledby='profile-tab')
             .container-fluid
-              p selams
+              p hello
 
 
 </template>
@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     fetchPlayer: async function(id) {
-      const res = await axios.get(`http://localhost:5000/player/${id}/json`)
+      const res = await axios.get(`http://192.168.99.100:5000/player/${id}/json`)
       this.player = res.data
     }
   }

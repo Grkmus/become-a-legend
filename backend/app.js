@@ -165,6 +165,7 @@ app.get('/daily-event/:id', async (req, res) => {
 //delete an event
 app.delete('/daily-event/:id', async (req, res) => {
     await DailyEventService.del(req.params.id)
+    res.send('ok')
 })
 
 //Add attendee to an event

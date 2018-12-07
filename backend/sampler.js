@@ -10,7 +10,7 @@ const Faker = require('faker')
       
 const Mongoose = require('mongoose')
 
-Mongoose.connect('mongodb://localhost/become-a-legend', { useNewUrlParser: true })
+Mongoose.connect('mongodb://192.168.99.100:32770/become-a-legend', { useNewUrlParser: true })
     .then(() => {
         console.log('baglandi')
     })

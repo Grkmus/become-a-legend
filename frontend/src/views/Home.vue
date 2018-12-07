@@ -58,15 +58,15 @@ export default {
   },
   methods: {
     fetchPlayers: async function(){
-      const res = await axios.get('http://localhost:5000/player/all')
+      const res = await axios.get('http://192.168.99.100:5000/player/all')
       this.players = res.data
     },
     fetchEvents: async function(){
-      const res = await axios.get('http://localhost:5000/daily-event/all')
+      const res = await axios.get('http://192.168.99.100:5000/daily-event/all')
       this.events = res.data
     },
     createEvent: async function(){
-      const res = await axios.post('http://localhost:5000/daily-event', {name: 'basketball', date: Date.now(), location: 'Ülker Arena'})
+      const res = await axios.post('http://192.168.99.100:5000/daily-event', {name: 'basketball', date: Date.now(), location: 'Ülker Arena'})
       this.eventId = res.data._id
       this.events.push(res.data)
     },

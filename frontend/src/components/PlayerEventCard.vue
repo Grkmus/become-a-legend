@@ -8,7 +8,7 @@
 .col-sm-4
     img.player.rounded-circle.mx-auto.d-block.img-fluid(:src='data.imageURL' @click='goToPlayer(data._id)')
     p(style='margin-bottom: 0px') {{data.name}} {{data.ratingEvaluation}}
-    .btn.btn-secondary.btn-sm(@click="captainSelectPlayer") Select
+    .btn.btn-secondary.btn-sm(@click="$emit('selectPlayer', data._id)") Select
 
 </template>
 <style>
@@ -23,9 +23,9 @@ export default {
     name: 'playerEventCard',
     props: ['data'],
     methods: {
-        captainSelectPlayer: function() {
-            this.$eventBus.$emit('captainSelectPlayerToEvent', this.data._id)
-        },
+        // captainSelectPlayer: function() {
+        //     this.$emit('handleSelect', this.data._id)
+        // },
         goToPlayer: function(_id) {
             router.push({
                 name: 'player',

@@ -16,6 +16,7 @@
     .card-footer
         //- p.card-text {{daysLeft}} Days {{hoursLeft}} hours {{minutesLeft}} minutes {{secondsLeft}} seconds Left to join
         router-link.btn.btn-sm.btn-primary(:to="{ name: 'event', params: { id: data._id }}") Go to event
+        input(v-model:value='numberOfPlayers')
         button(@click="attend" v-if="event.phase == 'phase1'") attend
         button(@click="deleteTheEventFromCard") delete the event
         //- ul.list-group
@@ -61,23 +62,25 @@ export default {
         return {
             event: this.data,
             attendeesCount: this.data.attendees.length,
-            distance: 0
+            distance: 0,
+            numberOfPlayers:0
         }
+
     },
     created() {
         // this.distanceFnc()
     },
     methods: {
         attend: async function(){
-            for (let i = 0; i < 50; i++) {
-                const res = await axios.post(`http://localhost:5000/daily-event/${this.event._id}/attendee`,{_id: this.$parent.players[i]._id})
+            for (let i = 0; i < this.numberOfPlayers; i++) {
+                const res = await axios.post(`http://192.168.99.100:5000/daily-event/${this.event._id}/attendee`,{_id: this.$parent.players[i]._id})
                 this.attendeesCount ++
             }
         },
         deleteTheEventFromCard: async function(){
             const index = this.$parent.events.indexOf(this.event)
             this.$eventBus.$emit('deleteTheEvent', index)
-            await axios.delete(`http://localhost:5000/daily-event/${this.event._id}`)      
+            await axios.delete(`http://192.168.99.100:5000/daily-event/${this.event._id}`)      
         },
         // distanceFnc: function(){
         //     const interval = setInterval(() => {
