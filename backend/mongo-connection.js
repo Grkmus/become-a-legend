@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
+console.log(process.env.DB_URL)
+const connectionString = process.env.DB_URL || 'mongodb://localhost/become-a-legend'
 
-mongoose.connect('mongodb://192.168.99.100:32770/become-a-legend', { useNewUrlParser: true })
+mongoose.connect(connectionString, { useNewUrlParser: true })
 .then(()=> {
      console.log('You did it! Your MongoDB is running.')
 }).catch(err => {
