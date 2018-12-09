@@ -43,7 +43,7 @@ export default {
         imageURL: formElements[3].value
       }
       console.log(player)
-      const res = await axios.post('http://localhost:5000/register', player )
+      const res = await axios.post('http://backend.docker.localhost/register', player )
       console.log(res.data)
       router.push({
         name: 'player',

@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     fetchPlayer: async function(id) {
-      const res = await axios.get(`http://192.168.99.100:5000/player/${id}/json`)
+      const res = await axios.get(`http://backend.docker.localhost/player/${id}/json`)
       this.player = res.data
     }
   }

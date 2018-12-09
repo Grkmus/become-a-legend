@@ -73,14 +73,14 @@ export default {
     methods: {
         attend: async function(){
             for (let i = 0; i < this.numberOfPlayers; i++) {
-                const res = await axios.post(`http://localhost:5000/daily-event/${this.event._id}/attendee`,{_id: this.$parent.players[i]._id})
+                const res = await axios.post(`http://backend.docker.localhost/daily-event/${this.event._id}/attendee`,{_id: this.$parent.players[i]._id})
                 this.attendeesCount ++
             }
         },
         deleteTheEventFromCard: async function(){
             const index = this.$parent.events.indexOf(this.event)
             this.$eventBus.$emit('deleteTheEvent', index)
-            await axios.delete(`http://localhost:5000/daily-event/${this.event._id}`)      
+            await axios.delete(`http://backend.docker.localhost/daily-event/${this.event._id}`)      
         },
         // distanceFnc: function(){
         //     const interval = setInterval(() => {

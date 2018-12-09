@@ -36,7 +36,7 @@ export default {
       // this.$eventBus.$on('timeIsUp', async (index) => {
       //   // this.events.splice(index, 1)
       //   setTimeout(()=> {}, 1000)
-      //   const event = (await axios.get(`http://localhost:5000/daily-event/${this.events[index]._id}`)).data
+      //   const event = (await axios.get(`http://backend.docker.localhost/daily-event/${this.events[index]._id}`)).data
       //   if (event.phase == 'phase2') {
       //     this.events[index] = event  
       //   } else {
@@ -49,7 +49,7 @@ export default {
     return {
       players: [],
       events: [],
-      eventId: null
+      eventId: null,
     }
   },
   components: {
@@ -58,15 +58,15 @@ export default {
   },
   methods: {
     fetchPlayers: async function(){
-      const res = await axios.get('http://localhost:5000/player/all')
+      const res = await axios.get('http://backend.docker.localhost/player/all')
       this.players = res.data
     },
     fetchEvents: async function(){
-      const res = await axios.get('http://localhost:5000/daily-event/all')
+      const res = await axios.get('http://backend.docker.localhost/daily-event/all')
       this.events = res.data
     },
     createEvent: async function(){
-      const res = await axios.post('http://localhost:5000/daily-event', {name: 'basketball', date: Date.now(), location: 'Ülker Arena'})
+      const res = await axios.post('http://backend.docker.localhost/daily-event', {name: 'basketball', date: Date.now(), location: 'Ülker Arena'})
       this.eventId = res.data._id
       this.events.push(res.data)
     },

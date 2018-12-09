@@ -24,6 +24,8 @@ services:
       - "8080:8080"
     depends_on: 
       - backend
+    environment: 
+      - VIRTUAL_HOST=app.becomealegend.com
 
 
   proxy:
