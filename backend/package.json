@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc ava --verbose",
-    "test-watch": "ava --verbose --watch"
+    "test-watch": "ava --verbose --watch",
+    "seed": "node sampler.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
