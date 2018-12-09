@@ -112,13 +112,13 @@ export default {
   methods: {
     fetchEvent: async function(id) {
       this.loading = true
-      const res = await axios.get(`http://192.168.99.100:5000/daily-event/${id}`)
+      const res = await axios.get(`http://localhost:5000/daily-event/${id}`)
       this.event = res.data
       this.loading = false
     },
     fetchEventPhase2: async function(id) {
       this.loading = true
-      const res = await axios.post(`http://192.168.99.100:5000/daily-event/phase2/`, {_id: this.event._id})
+      const res = await axios.post(`http://localhost:5000/daily-event/phase2/`, {_id: this.event._id})
       this.event = res.data
       this.teams = res.data.teams
       this.loading = false
@@ -149,7 +149,7 @@ export default {
     },
     handleSkipTurn: async function() {
       this.event.turn++
-      await axios.put(`http://192.168.99.100:5000/daily-event/${this.event._id}`, this.event )
+      await axios.put(`http://localhost:5000/daily-event/${this.event._id}`, this.event )
     },
     handleSelection: async function(id){
       const counter = this.event.turn % this.event.teams.length
@@ -165,15 +165,15 @@ export default {
       this.event.attendeesToBeSelected.splice(indexPlayer, 1)
       selectedTeam.credits = (selectedTeam.credits - selectedPlayer.ratingEvaluation).toFixed(2)
       selectedTeam.players.push(selectedPlayer)
-      await axios.put(`http://192.168.99.100:5000/team/${selectedTeam._id}`, selectedTeam)
+      await axios.put(`http://localhost:5000/team/${selectedTeam._id}`, selectedTeam)
       this.teamQuota--
       if(this.teamQuota == 0) {
         this.event.phase = 'phase3'
         this.unwatch()
-        await axios.put(`http://192.168.99.100:5000/daily-event/${this.event._id}`, this.event )
+        await axios.put(`http://localhost:5000/daily-event/${this.event._id}`, this.event )
       }
       this.event.turn++
-      await axios.put(`http://192.168.99.100:5000/daily-event/${this.event._id}`, this.event )
+      await axios.put(`http://localhost:5000/daily-event/${this.event._id}`, this.event )
     }
     // playerValidation: function(selectedPlayer, selectedTeam, indexPlayer) {
     //   return new Promise((resolve, reject) => {
